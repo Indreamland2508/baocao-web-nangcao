@@ -1,0 +1,99 @@
+﻿@{
+    ViewData["Title"] = "Trang chủ";
+}
+
+<style>
+    .modern-hero {
+        background: linear-gradient(135deg, #e8f5e9 0%, #c8e6c9 100%);
+        border-radius: 30px;
+        padding: 60px 0;
+        margin-top: 20px;
+        position: relative;
+        overflow: hidden;
+    }
+
+    .hero-text-box {
+        background: rgba(255, 255, 255, 0.9);
+        backdrop-filter: blur(10px);
+        padding: 40px;
+        border-radius: 20px;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.05);
+        z-index: 2;
+        position: relative;
+    }
+
+    .img-overlap-container {
+        position: relative;
+        height: 400px;
+    }
+
+    .img-main {
+        width: 70%;
+        border-radius: 20px;
+        position: absolute;
+        top: 0;
+        right: 0;
+        box-shadow: 0 15px 30px rgba(0,0,0,0.1);
+        z-index: 1;
+    }
+
+    .img-float {
+        width: 50%;
+        border-radius: 20px;
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        border: 8px solid white;
+        box-shadow: 0 15px 30px rgba(0,0,0,0.15);
+        z-index: 2;
+    }
+</style>
+
+<div class="container">
+    <div class="modern-hero shadow-sm">
+        <div class="row align-items-center px-4 px-md-5">
+            <div class="col-lg-5 mb-4 mb-lg-0">
+                <div class="hero-text-box">
+                    <span class="badge bg-warning text-dark px-3 py-2 rounded-pill mb-3">🔥 Khuyến mãi Hè 2026</span>
+                    <h1 class="fw-bold display-5 mb-3 text-dark">Khám phá<br><span class="text-success">Thiên Nhiên</span></h1>
+                    <p class="text-muted mb-4">Dịch vụ cho thuê lều trại chất lượng cao & tiện lợi. Lên đồ và bắt đầu chuyến đi của bạn ngay hôm nay!</p>
+                    <div class="d-flex gap-3">
+                        <a href="#" class="btn btn-success rounded-pill px-4 py-2 fw-bold shadow-sm">ĐẶT LỀU NGAY</a>
+                        <a href="#" class="btn btn-outline-dark rounded-pill px-4 py-2 fw-bold">XEM BẢNG GIÁ</a>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-7 text-center">
+                <img src="https://images.unsplash.com/photo-1523987355523-c7b5b0dd90a7?q=80&w=2070&auto=format&fit=crop" class="img-fluid" style="border-radius: 20px; transform: rotate(-2deg); box-shadow: 0 20px 40px rgba(0,0,0,0.2);" alt="Camping Tent">
+            </div>
+        </div>
+    </div>
+
+    <div class="row align-items-center mt-5 pt-5 mb-5">
+        <div class="col-lg-6 mb-5 mb-lg-0">
+            <div class="img-overlap-container">
+                <img src="https://images.unsplash.com/photo-1478131143081-80f7f84ca84d?q=80&w=2068&auto=format&fit=crop" class="img-main" alt="Camping 1">
+                <img src="~/images/products/leu4.jpg" class="img-float" alt="Camping 2">
+            </div>
+        </div>
+        <div class="col-lg-5 offset-lg-1">
+            <h6 class="text-success fw-bold text-uppercase tracking-wide">Về chúng tôi</h6>
+            <h2 class="fw-bold mb-4 display-6">Mang thiên nhiên đến gần bạn hơn.</h2>
+            <p class="text-muted mb-4" style="line-height: 1.8;">
+                Được thành lập với đam mê xê dịch, Camping Rental cung cấp hệ thống lều trại và phụ kiện đa dạng, sạch sẽ và an toàn.
+                Chúng tôi không chỉ cho thuê đồ, chúng tôi đồng hành cùng bạn trong việc tạo ra những kỷ niệm đẹp dưới bầu trời đầy sao.
+            </p>
+            <div class="row mb-4">
+                <div class="col-6">
+                    <h3 class="fw-bold text-dark">100%</h3>
+                    <p class="text-muted small">Lều chống nước</p>
+                </div>
+                <div class="col-6">
+                    <h3 class="fw-bold text-dark">24/7</h3>
+                    <p class="text-muted small">Hỗ trợ dựng lều</p>
+                </div>
+            </div>
+            <button class="btn btn-dark rounded-pill px-5 py-2 fw-bold">XEM THÊM</button>
+        </div>
+    </div>
+</div>

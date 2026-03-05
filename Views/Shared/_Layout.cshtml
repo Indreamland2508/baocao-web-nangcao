@@ -1,0 +1,196 @@
+﻿@using Microsoft.AspNetCore.Identity
+@inject SignInManager<IdentityUser> SignInManager
+@inject UserManager<IdentityUser> UserManager
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - Camping Rental</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css" rel="stylesheet">
+    <link rel="icon" type="image/x-icon" href="~/icon.jpg" />
+    <style>
+        .hero-section {
+            background-image: url('https://images.unsplash.com/photo-1478131143081-80f7f84ca84d?q=80&w=2068&auto=format&fit=crop');
+            background-size: cover;
+            background-position: center;
+            height: 100vh;
+            color: white;
+            display: flex;
+            align-items: center;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.7);
+        }
+
+        .hero-overlay {
+            background-color: rgba(0, 0, 0, 0.4);
+            width: 100%;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-light bg-white sticky-top shadow-sm py-3">
+        <div class="container">
+            <a class="navbar-brand fw-bold fs-4 text-success" asp-controller="Home" asp-action="Index">
+                <i class="bi bi-tent"></i> CAMPING RENTAL
+            </a>
+
+            <button class="navbar-toggler border-0" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav mx-auto fw-medium">
+                    <li class="nav-item mx-2">
+                        <a class="nav-link active" asp-controller="Home" asp-action="Index">Trang chủ</a>
+                    </li>
+                    <li class="nav-item mx-2">
+                        <a class="nav-link" asp-controller="Home" asp-action="ProductList">Danh sách Lều</a>
+                    </li>
+                    <li class="nav-item mx-2">
+                        <a class="nav-link" href="#">Về chúng tôi</a>
+                    </li>
+                </ul>
+
+                <ul class="navbar-nav align-items-center">
+                    <li class="nav-item me-3">
+                        <a class="nav-link text-dark fs-5" asp-controller="Products" asp-action="Index">
+                            <i class="bi bi-search"></i>
+                        </a>
+                    </li>
+
+                    @using Microsoft.AspNetCore.Http
+                    @inject IHttpContextAccessor HttpContextAccessor
+                    @{
+                        // Đọc con số từ Session, nếu chưa có gì thì mặc định là 0
+                        var count = HttpContextAccessor.HttpContext.Session.GetInt32("CartCount") ?? 0;
+                    }
+
+                    <a class="nav-link position-relative" asp-controller="Cart" asp-action="Index">
+                        <i class="bi bi-cart3 fs-4"></i>
+                        @if (count > 0)
+                        {
+                            <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger" style="font-size: 0.7rem;">
+                                @count
+                            </span>
+                        }
+                    </a>
+
+                    @if (SignInManager.IsSignedIn(User))
+                    {
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle text-dark" href="#" id="userDropdown" role="button" data-bs-toggle="dropdown">
+                                <i class="bi bi-person-circle fs-5 me-1"></i>
+                            </a>
+                            <ul class="dropdown-menu dropdown-menu-end shadow border-0">
+                                <li><a class="dropdown-item" asp-controller="Accounts" asp-action="MyProfile"><i class="bi bi-person-vcard me-2"></i>Hồ sơ của tôi</a></li>
+
+                                @if (User.IsInRole("Admin") || User.IsInRole("Staff"))
+                                {
+                                    <li><a class="dropdown-item" asp-controller="Admin" asp-action="Index"><i class="bi bi-speedometer2 me-2 text-warning"></i>Vào Quản trị</a></li>
+                                }
+
+                                <li><hr class="dropdown-divider"></li>
+                                <li>
+                                    <form class="form-inline" asp-area="Identity" asp-page="/Account/Logout" asp-route-returnUrl="@Url.Action("Index", "Home", new { area = "" })" method="post">
+                                        <button type="submit" class="dropdown-item text-danger border-0 bg-transparent">
+                                            <i class="bi bi-box-arrow-right me-2"></i>Đăng xuất
+                                        </button>
+                                    </form>
+                                </li>
+                            </ul>
+                        </li>
+                    }
+                    else
+                    {
+                        <li class="nav-item">
+                            <a class="nav-link text-dark fs-5" asp-controller="Accounts" asp-action="Login">
+                                <a class="nav-link text-dark fs-5" asp-area="Identity" asp-page="/Account/Login">
+                                    <i class="bi bi-person"></i>
+                                </a>
+                            </a>
+                        </li>
+                    }
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <main role="main">
+        @RenderBody()
+    </main>
+    <footer style="background-color: #f8f9fa;" class="pt-5 pb-3 border-top mt-5">
+        <div class="container">
+            <div class="row g-4">
+                <div class="col-lg-4 col-md-6">
+                    <h5 class="fw-bold text-success mb-3"><i class="bi bi-tent"></i> CAMPING RENTAL</h5>
+                    <p class="text-muted small" style="line-height: 1.8;">
+                        Chúng tôi cung cấp giải pháp cho thuê lều trại và phụ kiện dã ngoại chuyên nghiệp, giúp bạn có những trải nghiệm tuyệt vời nhất cùng thiên nhiên.
+                    </p>
+                    <div class="d-flex gap-3 mt-3">
+                        <a href="#" class="btn btn-outline-success btn-sm rounded-circle"><i class="bi bi-facebook"></i></a>
+                        <a href="#" class="btn btn-outline-success btn-sm rounded-circle"><i class="bi bi-instagram"></i></a>
+                        <a href="#" class="btn btn-outline-success btn-sm rounded-circle"><i class="bi bi-youtube"></i></a>
+                    </div>
+                </div>
+
+                <div class="col-lg-2 col-md-6">
+                    <h6 class="fw-bold mb-3 text-dark">Khám phá</h6>
+                    <ul class="list-unstyled small">
+                        <li class="mb-2"><a asp-controller="Home" asp-action="Index" class="text-decoration-none text-muted hover-success">Trang chủ</a></li>
+                        <li class="mb-2"><a href="#" class="text-decoration-none text-muted hover-success">Danh sách Lều</a></li>
+                        <li class="mb-2"><a href="#" class="text-decoration-none text-muted hover-success">Cẩm nang cắm trại</a></li>
+                    </ul>
+                </div>
+
+                <div class="col-lg-3 col-md-6">
+                    <h6 class="fw-bold mb-3 text-dark">Hỗ trợ</h6>
+                    <ul class="list-unstyled small">
+                        <li class="mb-2"><a href="#" class="text-decoration-none text-muted hover-success">Hướng dẫn thanh toán</a></li>
+                        <li class="mb-2"><a href="#" class="text-decoration-none text-muted hover-success">Liên hệ góp ý</a></li>
+                        <li class="mb-2"><a href="#" class="text-decoration-none text-muted hover-success">Bảo mật thông tin</a></li>
+                    </ul>
+                </div>
+
+                <div class="col-lg-3 col-md-6">
+                    <h6 class="fw-bold mb-3 text-dark">Liên hệ với chúng tôi</h6>
+                    <ul class="list-unstyled small text-muted">
+                        <li class="mb-2 d-flex"><i class="bi bi-geo-alt me-2 text-success"></i> 234 Hoàng Quốc Việt, Bắc Từ Liêm, Hà Nội</li>
+                        <li class="mb-2"><i class="bi bi-telephone me-2 text-success"></i> 0123.456.789</li>
+                        <li class="mb-2"><i class="bi bi-envelope me-2 text-success"></i> contact@campingrental.vn</li>
+                        <li class="mb-2"><i class="bi bi-clock me-2 text-success"></i> 08:00 - 21:00 hàng ngày</li>
+                    </ul>
+                </div>
+            </div>
+
+            <hr class="my-4 text-muted opacity-25">
+
+            <div class="row align-items-center">
+                <div class="col-md-6 text-center text-md-start">
+                    <p class="text-muted small mb-0">&copy; 2026 Camping Rental. Thiết kế bởi <span class="fw-bold">Nguyễn Hoàng Châu & Vũ Xuân Trường</span>.</p>
+                </div>
+                <div class="col-md-6 text-center text-md-end mt-3 mt-md-0">
+                    <span class="text-muted small me-3">Chấp nhận thanh toán:</span>
+                    <i class="bi bi-credit-card-2-back fs-4 me-2 text-secondary"></i>
+                    <i class="bi bi-wallet2 fs-4 text-secondary"></i>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <style>
+        .hover-success:hover {
+            color: #198754 !important;
+            padding-left: 5px;
+            transition: all 0.2s ease;
+        }
+    </style>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>

@@ -1,0 +1,160 @@
+﻿@model IEnumerable<BAOCAOWEBNANGCAO.Models.Order>
+
+@{
+    ViewData["Title"] = "Quản lý đơn thuê";
+    Layout = "_AdminLayout";
+}
+
+<style>
+    /* Card Header với dải màu Gradient xanh rừng sâu đồng bộ Sidebar */
+    .card-header-forest {
+        background: linear-gradient(135deg, #1a3a28 0%, #2e5a40 100%);
+        color: white;
+        border-radius: 20px 20px 0 0 !important;
+        padding: 1.25rem;
+    }
+
+    /* Tinh chỉnh bảng cho thông thoáng và hiện đại */
+    .table-modern {
+        border-radius: 15px;
+        overflow: hidden;
+    }
+
+        .table-modern thead th {
+            background-color: #f8faf9;
+            color: #4b5563;
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            font-weight: 700;
+            border: none;
+            padding: 15px;
+        }
+
+        .table-modern tbody td {
+            padding: 15px;
+            vertical-align: middle;
+        }
+
+    /* Các Badge trạng thái "sang" hơn */
+    .badge-status {
+        padding: 8px 12px;
+        border-radius: 50rem;
+        font-weight: 700;
+        font-size: 0.7rem;
+        text-transform: uppercase;
+    }
+
+    .status-pending {
+        background-color: #fff4e6;
+        color: #d97706;
+    }
+    /* Chờ duyệt */
+    .status-approved {
+        background-color: #e0f2fe;
+        color: #0369a1;
+    }
+    /* Đang thuê */
+    .status-completed {
+        background-color: #eaf5ea;
+        color: #157347;
+    }
+    /* Hoàn thành */
+    .status-cancelled {
+        background-color: #fee2e2;
+        color: #dc2626;
+    }
+    /* Đã hủy */
+
+    /* Nút thao tác bo tròn viên thuốc */
+    .btn-action {
+        border-radius: 50rem;
+        font-weight: 600;
+        padding: 5px 15px;
+        transition: all 0.2s;
+    }
+</style>
+
+<div class="container-fluid px-4 mt-4">
+    <div class="mb-4">
+        <h2 class="fw-bold text-dark m-0"><i class="bi bi-receipt-cutoff text-success me-2"></i> Quản lý Đơn thuê lều</h2>
+        <p class="text-muted small">Cập nhật và xử lý đơn hàng từ khách hàng nhanh chóng</p>
+    </div>
+
+    <div class="card border-0 shadow-sm" style="border-radius: 20px;">
+        <div class="card-header-forest d-flex align-items-center">
+            <i class="bi bi-table me-2"></i>
+            <h6 class="m-0 fw-bold">Danh sách đơn hàng mới</h6>
+        </div>
+        <div class="card-body p-0">
+            <div class="table-responsive">
+                <table class="table table-hover mb-0 table-modern">
+                    <thead>
+                        <tr>
+                            <th class="ps-4">Mã đơn</th>
+                            <th>Ngày đặt</th>
+                            <th>Khách hàng</th>
+                            <th>Thời gian thuê</th>
+                            <th>Tổng tiền</th>
+                            <th>Trạng thái</th>
+                            <th class="text-end pe-4">Thao tác</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var item in Model.OrderByDescending(o => o.OrderDate))
+                        {
+                            <tr>
+                                <td class="ps-4 fw-bold text-dark">#@item.Id</td>
+                                <td>
+                                    <div class="fw-medium">@item.OrderDate.ToString("dd/MM/yyyy")</div>
+                                    <div class="text-muted small">@item.OrderDate.ToString("HH:mm")</div>
+                                </td>
+                                <td>
+                                    <div class="fw-bold text-dark">@item.CustomerName</div>
+                                    <div class="text-muted small">@item.CustomerPhone</div>
+                                </td>
+                                <td>
+                                    <div class="small">Từ: <span class="fw-bold">@item.RentalStartDate.ToString("dd/MM")</span></div>
+                                    <div class="small">Đến: <span class="fw-bold">@item.RentalEndDate.ToString("dd/MM")</span></div>
+                                </td>
+                                <td>
+                                    <span class="text-success fw-bold">@item.TotalAmount.ToString("#,##0")₫</span>
+                                </td>
+                                <td>
+                                    @if (item.Status == "Pending")
+                                    {
+                                        <span class="badge-status status-pending">Chờ duyệt</span>
+                                    }
+                                    else if (item.Status == "Approved")
+                                    {
+                                        <span class="badge-status status-approved">Đang thuê</span>
+                                    }
+                                    else if (item.Status == "Completed")
+                                    {
+                                        <span class="badge-status status-completed">Hoàn thành</span>
+                                    }
+                                    else if (item.Status == "Cancelled")
+                                    {
+                                        <span class="badge-status status-cancelled">Đã hủy</span>
+                                    }
+                                    else
+                                    {
+                                        <span class="badge bg-secondary badge-status">@item.Status</span>
+                                    }
+                                </td>
+                                <td class="text-end pe-4">
+                                    <a asp-action="Details" asp-route-id="@item.Id" class="btn btn-sm btn-light btn-action text-primary me-1 border">
+                                        <i class="bi bi-eye"></i> Xem
+                                    </a>
+                                    <a asp-action="Delete" asp-route-id="@item.Id" class="btn btn-sm btn-light btn-action text-danger border">
+                                        <i class="bi bi-trash"></i> Xóa
+                                    </a>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>

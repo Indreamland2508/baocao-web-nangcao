@@ -1,0 +1,138 @@
+﻿@model BAOCAOWEBNANGCAO.Models.Product
+
+@{
+    ViewData["Title"] = Model.Name;
+}
+
+<style>
+    /* Bo góc sâu cho ảnh sản phẩm giống style Admin */
+    .product-img-card {
+        border-radius: 30px;
+        overflow: hidden;
+        border: none;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+    }
+
+    /* Badge xanh lá thay cho màu vàng cũ */
+    .badge-category {
+        background-color: #eaf5ea;
+        color: #198754;
+        padding: 8px 16px;
+        border-radius: 50rem;
+        font-weight: 600;
+        font-size: 0.8rem;
+    }
+
+    /* Nút thêm vào giỏ hàng kiểu Modern Pill */
+    .btn-add-cart {
+        background: linear-gradient(135deg, #198754 0%, #157347 100%);
+        color: white;
+        border: none;
+        border-radius: 15px;
+        padding: 15px 20px;
+        font-weight: 700;
+        transition: all 0.3s;
+    }
+
+        .btn-add-cart:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(25, 135, 84, 0.25);
+            color: white;
+        }
+
+    .booking-box {
+        background-color: #f8fbf9;
+        border-radius: 25px;
+        border: 1px solid #eef2ef;
+    }
+
+    .breadcrumb-item a {
+        color: #6c757d;
+        font-weight: 500;
+    }
+</style>
+
+<div class="container py-5">
+    <nav aria-label="breadcrumb" class="mb-4">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a asp-action="Index" class="text-decoration-none">Trang chủ</a></li>
+            <li class="breadcrumb-item"><a href="#" class="text-decoration-none">@Model.Category?.Name</a></li>
+            <li class="breadcrumb-item active" aria-current="page">@Model.Name</li>
+        </ol>
+    </nav>
+
+    <div class="row g-5">
+        <div class="col-md-6">
+            <div class="card product-img-card">
+                <img src="@Model.ImageUrl" class="card-img-top" alt="@Model.Name" style="object-fit: cover; min-height: 450px;">
+            </div>
+        </div>
+
+        <div class="col-md-6">
+            <div class="ps-lg-4">
+                <span class="badge-category mb-3 d-inline-block">@Model.Category?.Name</span>
+                <h1 class="display-6 fw-bold text-dark mb-3">@Model.Name</h1>
+
+                <div class="d-flex align-items-baseline mb-4">
+                    <h2 class="text-success fw-bold mb-0 me-2">@Model.PricePerDay.ToString("#,##0") đ</h2>
+                    <span class="text-muted fs-6">/ ngày đêm</span>
+                </div>
+
+                <p class="text-muted mb-5 lh-lg">@Model.Description</p>
+
+                <div class="card booking-box p-4 mb-4">
+                    <form asp-controller="Cart" asp-action="AddToCart" method="post">
+                        <input type="hidden" name="productId" value="@Model.Id" />
+
+                        <div class="row g-3 align-items-center mb-4">
+                            <div class="col-auto">
+                                <label class="col-form-label fw-bold text-dark">Số lượng thuê:</label>
+                            </div>
+                            <div class="col-auto">
+                                <input type="number" name="quantity" class="form-control text-center shadow-sm border-0"
+                                       value="1" min="1" max="@Model.Quantity"
+                                       style="width: 80px; border-radius: 10px; height: 45px;">
+                            </div>
+                            <div class="col">
+                                <span class="text-muted small">
+                                    <i class="bi bi-info-circle"></i> Kho còn: <strong>@Model.Quantity</strong>
+                                </span>
+                            </div>
+                        </div>
+
+                        <div class="d-grid">
+                            @if (Model.Quantity > 0)
+                            {
+                                <button type="submit" class="btn btn-add-cart shadow-sm">
+                                    <i class="bi bi-cart-plus-fill me-2"></i> THÊM VÀO GIỎ THUÊ
+                                </button>
+                            }
+                            else
+                            {
+                                <button type="button" class="btn btn-secondary rounded-4 py-3" disabled>TẠM HẾT HÀNG</button>
+                            }
+                        </div>
+                    </form>
+                </div>
+
+                <div class="row g-3 pt-2">
+                    <div class="col-md-4 col-6">
+                        <div class="d-flex align-items-center text-muted small">
+                            <i class="bi bi-shield-check text-success fs-5 me-2"></i> Chính hãng
+                        </div>
+                    </div>
+                    <div class="col-md-4 col-6">
+                        <div class="d-flex align-items-center text-muted small">
+                            <i class="bi bi-stars text-success fs-5 me-2"></i> Vệ sinh 5*
+                        </div>
+                    </div>
+                    <div class="col-md-4 col-12">
+                        <div class="d-flex align-items-center text-muted small">
+                            <i class="bi bi-lightning-charge text-success fs-5 me-2"></i> Thủ tục 5p
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

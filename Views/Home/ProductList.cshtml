@@ -1,0 +1,41 @@
+﻿@model IEnumerable<BAOCAOWEBNANGCAO.Models.Product>
+
+@{
+    ViewData["Title"] = "Danh sách sản phẩm";
+}
+
+<div class="container py-5">
+    <div class="row mb-5">
+        <div class="col-12 text-center">
+            <h2 class="fw-bold display-5">Danh sách Sản phẩm</h2>
+            <p class="text-muted">Lựa chọn những thiết bị tốt nhất cho chuyến đi của bạn</p>
+        </div>
+    </div>
+
+    <div class="row mb-4">
+        <div class="col-12 d-flex justify-content-center gap-2">
+            <button class="btn btn-outline-success rounded-pill px-4 active">Tất cả</button>
+            @foreach (var cat in ViewBag.Categories)
+            {
+                <button class="btn btn-outline-success rounded-pill px-4">@cat.Name</button>
+            }
+        </div>
+    </div>
+
+    <div class="row g-4">
+        @foreach (var item in Model)
+        {
+            <div class="col-lg-3 col-md-4 col-sm-6">
+                <div class="card h-100 border-0 shadow-sm p-3" style="border-radius: 20px;">
+                    <img src="@item.ImageUrl" class="card-img-top rounded-4" style="height: 200px; object-fit: cover;" alt="@item.Name">
+                    <div class="card-body px-0 pb-0">
+                        <span class="badge bg-success-subtle text-success rounded-pill mb-2">@item.Category?.Name</span>
+                        <h5 class="fw-bold mb-1">@item.Name</h5>
+                        <p class="text-success fw-bold fs-5">@item.PricePerDay.ToString("#,##0") đ <small class="text-muted fw-normal" style="font-size: 0.7rem;">/ngày</small></p>
+                        <a asp-action="Details" asp-route-id="@item.Id" class="btn btn-dark w-100 rounded-pill py-2 mt-2">Xem chi tiết</a>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+</div>
