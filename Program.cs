@@ -66,15 +66,20 @@ app.MapControllerRoute(
 
 app.MapRazorPages();
 
+app.MapRazorPages();
+
+// Migration
+using (var scope = app.Services.CreateScope())
+{
+    var db = scope.ServiceProvider.GetRequiredService<CampingDbContext>();
+    db.Database.Migrate();
+}
+
 // Seeder
 using (var scope = app.Services.CreateScope())
 {
     var services = scope.ServiceProvider;
     await DbSeeder.SeedDefaultData(services);
 }
-using (var scope = app.Services.CreateScope())
-{
-    var db = scope.ServiceProvider.GetRequiredService<CampingDbContext>();
-    db.Database.Migrate();
-}
+
 app.Run();
