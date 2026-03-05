@@ -17,9 +17,9 @@ namespace BAOCAOWEBNANGCAO.Controllers
 
         public async Task<IActionResult> Index()
         {
-            // ========================
-            // THỐNG KÊ DASHBOARD
-            // ========================
+            // ======================
+            // 1. THỐNG KÊ DASHBOARD
+            // ======================
 
             // Tổng doanh thu
             var totalRevenue = await _context.Orders
@@ -27,26 +27,33 @@ namespace BAOCAOWEBNANGCAO.Controllers
                 .Select(o => (decimal?)o.TotalAmount)
                 .SumAsync() ?? 0;
 
-            // Đơn hàng chờ duyệt
+            // Đơn chờ duyệt
             var pendingOrders = await _context.Orders
                 .CountAsync(o => o.Status == "Pending");
 
             // Tổng sản phẩm
             var totalProducts = await _context.Products.CountAsync();
 
-            // Đơn hôm nay
+            // ======================
+            // 2. ĐƠN HÀNG HÔM NAY
+            // ======================
+
+            var today = DateTime.UtcNow.Date;
+            var tomorrow = today.AddDays(1);
+
             var todayOrders = await _context.Orders
-                .CountAsync(o => o.OrderDate.Date == DateTime.Today);
+                .CountAsync(o => o.OrderDate >= today && o.OrderDate < tomorrow);
 
-            // ========================
-            // BIỂU ĐỒ DOANH THU 7 NGÀY
-            // ========================
+            // ======================
+            // 3. BIỂU ĐỒ 7 NGÀY
+            // ======================
 
-            var startDate = DateTime.Today.AddDays(-6);
+            var startDate = DateTime.UtcNow.Date.AddDays(-6);
 
             var revenueData = await _context.Orders
-                .Where(o => o.OrderDate >= startDate &&
-                       (o.Status == "Completed" || o.Status == "Approved"))
+                .Where(o =>
+                    o.OrderDate >= startDate &&
+                    (o.Status == "Completed" || o.Status == "Approved"))
                 .GroupBy(o => o.OrderDate.Date)
                 .Select(g => new
                 {
@@ -69,9 +76,9 @@ namespace BAOCAOWEBNANGCAO.Controllers
                 data.Add(revenue);
             }
 
-            // ========================
-            // GỬI DATA SANG VIEW
-            // ========================
+            // ======================
+            // 4. GỬI DỮ LIỆU SANG VIEW
+            // ======================
 
             ViewBag.TotalRevenue = totalRevenue;
             ViewBag.PendingOrders = pendingOrders;
