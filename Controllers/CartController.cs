@@ -185,7 +185,16 @@ namespace BAOCAOWEBNANGCAO.Controllers
 
             await _context.SaveChangesAsync();
             HttpContext.Session.Remove("GioHangCuaToi");
-            return RedirectToAction("OrderSuccess");
+            return RedirectToAction("Payment", new { id = order.Id });
+        }
+        public async Task<IActionResult> Payment(int id)
+        {
+            var order = await _context.Orders.FindAsync(id);
+
+            if (order == null)
+                return NotFound();
+
+            return View(order);
         }
         // 7. Trang thông báo mua thành công
         public IActionResult OrderSuccess()

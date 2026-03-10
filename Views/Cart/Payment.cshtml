@@ -1,0 +1,15 @@
+﻿@model Order
+
+<h2>Thanh toán đơn hàng #@Model.Id</h2>
+
+<p>Số tiền cần thanh toán:</p>
+
+<h3>@Model.TotalAmount.ToString("N0") đ</h3>
+
+<img src="https://qr.sepay.vn/img?acc=0982412582005&bank=MB&amount=@Model.TotalAmount&des=ORDER@Model.Id" width="300" />
+
+<p>
+	Quét QR để thanh toán <br>
+	Nội dung chuyển khoản:
+	<b>ORDER@Model.Id</b>
+</p>
