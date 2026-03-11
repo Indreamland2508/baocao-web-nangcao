@@ -1,5 +1,4 @@
 ﻿using BAOCAOWEBNANGCAO.Data;
-using BAOCAOWEBNANGCAO.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
@@ -17,32 +16,40 @@ namespace BAOCAOWEBNANGCAO.Controllers
         }
 
         // =============================
-        // WEBHOOK SEPAY
+        // WEBHOOK NHẬN THANH TOÁN
         // =============================
         [HttpPost("webhook")]
-        public async Task<IActionResult> Webhook([FromBody] WebhookModel data)
+        public async Task<IActionResult> Webhook([FromBody] SepayWebhook data)
         {
             if (data == null)
                 return BadRequest();
 
-            var order = await _context.Orders
-                .FirstOrDefaultAsync(x => x.Id == data.orderId);
+            if (string.IsNullOrEmpty(data.content))
+                return Ok();
 
-            if (order == null)
-                return NotFound();
-
-            // Kiểm tra trạng thái thanh toán
-            if (data.status == "success")
+            // ví dụ content = ORDER15
+            if (data.content.StartsWith("ORDER"))
             {
-                order.Status = "Paid";
-                await _context.SaveChangesAsync();
+                var idText = data.content.Replace("ORDER", "");
+
+                if (int.TryParse(idText, out int orderId))
+                {
+                    var order = await _context.Orders
+                        .FirstOrDefaultAsync(x => x.Id == orderId);
+
+                    if (order != null)
+                    {
+                        order.Status = "Paid";
+                        await _context.SaveChangesAsync();
+                    }
+                }
             }
 
             return Ok();
         }
 
         // =============================
-        // API KIỂM TRA TRẠNG THÁI ORDER
+        // API CHECK TRẠNG THÁI ORDER
         // =============================
         [HttpGet("check/{orderId}")]
         public async Task<IActionResult> Check(int orderId)
@@ -53,22 +60,14 @@ namespace BAOCAOWEBNANGCAO.Controllers
             if (order == null)
                 return NotFound();
 
-            return Json(new
-            {
-                status = order.Status
-            });
+            return Json(new { status = order.Status });
         }
     }
 
-    // =============================
-    // MODEL NHẬN WEBHOOK
-    // =============================
-    public class WebhookModel
+    public class SepayWebhook
     {
-        public int orderId { get; set; }
+        public string content { get; set; }
 
         public decimal amount { get; set; }
-
-        public string status { get; set; }
     }
 }

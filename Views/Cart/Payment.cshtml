@@ -22,23 +22,21 @@
 
     const orderId = @Model.Id;
 
-    async function checkPayment() {
+    async function checkPayment(){
 
         const res = await fetch("/api/payment/check/" + orderId);
 
-        if (!res.ok) return;
+        if(!res.ok) return;
 
         const data = await res.json();
 
-        if (data.status === "Paid") {
-
-            document.getElementById("status").innerText = "Thanh toán thành công!";
+        if(data.status === "Paid"){
 
             window.location.href = "/Cart/OrderSuccess";
 
         }
     }
 
-    setInterval(checkPayment, 5000);
+    setInterval(checkPayment,3000);
 
 </script>
