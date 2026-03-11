@@ -2,78 +2,12 @@
 
 @{
     ViewData["Title"] = "Thanh toán";
-    decimal cartTotal = Model.Sum(item => item.TotalPrice);
+    decimal cartTotal = Model?.Sum(item => item.TotalPrice) ?? 0;
 }
-
-<style>
-    body {
-        background-color: #f4f7f5;
-        font-family: 'Plus Jakarta Sans', sans-serif;
-    }
-
-    .checkout-card {
-        border-radius: 24px;
-        border: none;
-        box-shadow: 0 10px 40px rgba(0,0,0,0.03);
-        background: #fff;
-    }
-
-    .form-control {
-        border-radius: 12px;
-        border: 1px solid #eef2ef;
-        padding: 12px 16px;
-        background-color: #fcfdfc;
-        transition: all 0.3s;
-    }
-
-        .form-control:focus {
-            border-color: #198754;
-            box-shadow: 0 0 0 4px rgba(25,135,84,0.08);
-            background-color: #fff;
-        }
-
-    .order-summary-box {
-        background: linear-gradient(135deg,#ffffff 0%,#f1f8f4 100%);
-        border-radius: 24px;
-        position: sticky;
-        top: 20px;
-    }
-
-    .btn-checkout-final {
-        background: linear-gradient(135deg,#198754 0%,#157347 100%);
-        border: none;
-        border-radius: 15px;
-        padding: 16px;
-        font-weight: 700;
-        letter-spacing: .5px;
-        transition: all .3s;
-        color: white;
-    }
-
-        .btn-checkout-final:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 10px 25px rgba(25,135,84,.25);
-            color: white;
-        }
-
-    .badge-qty {
-        background: #198754 !important;
-        font-size: .7rem;
-    }
-
-    .text-primary-custom {
-        color: #198754 !important;
-    }
-
-    .bg-light-custom {
-        background-color: #f8faf9 !important;
-    }
-</style>
 
 <div class="container py-5">
 
-    ```
-    <form asp-action="Checkout" method="post" id="checkoutForm">
+    <form asp-action="Checkout" asp-controller="Cart" method="post">
 
         @Html.AntiForgeryToken()
 
@@ -82,131 +16,64 @@
             <!-- LEFT SIDE -->
             <div class="col-lg-7">
 
-                <div class="card checkout-card p-4 p-md-5">
+                <div class="card p-4">
 
-                    <div class="d-flex justify-content-between align-items-center mb-4">
-                        <h4 class="fw-bold mb-0 text-dark">Thông tin nhận hàng</h4>
+                    <h4 class="fw-bold mb-4">Thông tin nhận hàng</h4>
 
-                        <a asp-area="Identity"
-                           asp-page="/Account/Login"
-                           class="text-decoration-none text-primary-custom small fw-bold">
-                            <i class="bi bi-person-circle"></i> Đăng nhập
-                        </a>
+                    <div class="mb-3">
+                        <label>Email</label>
+                        <input type="email" name="customerEmail" class="form-control">
                     </div>
 
-                    <div class="row g-3">
-
-                        <div class="col-12">
-                            <label class="small fw-bold text-muted mb-1">
-                                Email liên hệ
-                            </label>
-
-                            <input type="email"
-                                   name="customerEmail"
-                                   class="form-control"
-                                   placeholder="Để nhận thông báo đơn hàng..." />
-                        </div>
-
-                        <div class="col-12">
-                            <label class="small fw-bold text-muted mb-1">
-                                Họ và tên người thuê
-                            </label>
-
-                            <input type="text"
-                                   name="customerName"
-                                   class="form-control"
-                                   required
-                                   placeholder="Họ và tên của bạn" />
-                        </div>
-
-                        <div class="col-12">
-                            <label class="small fw-bold text-muted mb-1">
-                                Số điện thoại
-                            </label>
-
-                            <div class="input-group">
-
-                                <span class="input-group-text bg-white text-muted border-end-0"
-                                      style="border-radius:12px 0 0 12px;">
-                                    🇻🇳 +84
-                                </span>
-
-                                <input type="text"
-                                       name="customerPhone"
-                                       class="form-control border-start-0"
-                                       style="border-radius:0 12px 12px 0;"
-                                       required
-                                       placeholder="Số điện thoại liên lạc" />
-                            </div>
-                        </div>
-
-                        <div class="col-12">
-                            <label class="small fw-bold text-muted mb-1">
-                                Địa chỉ nhận lều
-                            </label>
-
-                            <input type="text"
-                                   name="shippingAddress"
-                                   class="form-control"
-                                   required
-                                   placeholder="Số nhà, Tên đường, Phường/Xã..." />
-                        </div>
-
-                        <div class="col-12">
-                            <label class="small fw-bold text-muted mb-1">
-                                Ghi chú
-                            </label>
-
-                            <textarea name="note"
-                                      class="form-control"
-                                      rows="3"
-                                      placeholder="Ví dụ: Giao lều trước 8h sáng..."></textarea>
-                        </div>
+                    <div class="mb-3">
+                        <label>Họ và tên</label>
+                        <input type="text" name="customerName" class="form-control" required>
                     </div>
 
-                    <!-- RENTAL TIME -->
+                    <div class="mb-3">
+                        <label>Số điện thoại</label>
+                        <input type="text" name="customerPhone" class="form-control" required>
+                    </div>
 
-                    <h5 class="fw-bold mt-5 mb-3 text-dark">
-                        <i class="bi bi-calendar-event me-2 text-primary-custom"></i>
-                        Thời gian thuê
-                    </h5>
+                    <div class="mb-3">
+                        <label>Địa chỉ giao hàng</label>
+                        <input type="text" name="shippingAddress" class="form-control" required>
+                    </div>
 
-                    <div class="row g-3 p-4 bg-light-custom rounded-4 border border-white shadow-sm">
+                    <div class="mb-3">
+                        <label>Ghi chú</label>
+<textarea name="note" class="form-control"></textarea>
+                    </div>
+
+                    <h5 class="fw-bold mt-4">Thời gian thuê</h5>
+
+                    <div class="row">
 
                         <div class="col-md-6">
-                            <label class="small text-muted fw-bold mb-1">
-                                Từ ngày
-                            </label>
-
+                            <label>Từ ngày</label>
                             <input type="date"
                                    name="rentalStart"
                                    id="rentalStart"
-                                   class="form-control bg-white shadow-sm"
+                                   class="form-control"
                                    required
-                                   value="@DateTime.Now.ToString("yyyy-MM-dd")" />
+                                   value="@DateTime.Now.ToString("yyyy-MM-dd")">
                         </div>
 
                         <div class="col-md-6">
-                            <label class="small text-muted fw-bold mb-1">
-                                Đến ngày
-                            </label>
-
+                            <label>Đến ngày</label>
                             <input type="date"
                                    name="rentalEnd"
                                    id="rentalEnd"
-                                   class="form-control bg-white shadow-sm"
+                                   class="form-control"
                                    required
-                                   value="@DateTime.Now.AddDays(1).ToString("yyyy-MM-dd")" />
-                        </div>
-
-                        <div class="col-12 text-end">
-                            <span class="badge bg-success-subtle text-success px-3 py-2 rounded-pill fw-bold"
-                                  id="dayCountText">
-                                Thời gian: 1 ngày
-                            </span>
+                                   value="@DateTime.Now.AddDays(1).ToString("yyyy-MM-dd")">
                         </div>
 
                     </div>
+
+                    <p class="mt-2">
+                        Số ngày thuê: <b id="dayCount">1</b>
+                    </p>
 
                 </div>
             </div>
@@ -214,55 +81,52 @@
             <!-- RIGHT SIDE -->
             <div class="col-lg-5">
 
-                <div class="card checkout-card order-summary-box p-4 p-md-5">
+                <div class="card p-4">
 
-                    <h5 class="fw-bold mb-4 text-dark">
-                        Đơn hàng (@Model.Count sản phẩm)
-                    </h5>
+                    <h5 class="fw-bold mb-3">Đơn hàng (@Model.Count)</h5>
 
-                    <div class="mb-4" style="max-height:280px;overflow-y:auto;">
+                    @foreach (var item in Model)
+                    {
+                        <div class="d-flex justify-content-between mb-2">
 
-                        @foreach (var item in Model)
-                        {
-                            <div class="d-flex justify-content-between mb-3 border-bottom pb-3">
-
-                                <div>
-                                    <b>@item.Product.Name</b>
-                                    <br />
-                                    <small>Số lượng: @item.Quantity</small>
-                                </div>
-
-                                <div class="fw-bold">
-                                    @item.TotalPrice.ToString("#,##0")₫
-                                </div>
-
+                            <div>
+                                <b>@item.Product.Name</b>
+                                <br>
+                                <small>x @item.Quantity</small>
                             </div>
-                        }
 
-                    </div>
+                            <div>
+                                @item.TotalPrice.ToString("#,##0") ₫
+                            </div>
 
-                    <div class="d-flex justify-content-between mb-2">
+                        </div>
+                    }
+
+                    <hr>
+
+                    <div class="d-flex justify-content-between">
                         <span>Tạm tính</span>
-                        <b>@cartTotal.ToString("#,##0")₫</b>
+                        <b>@cartTotal.ToString("#,##0") ₫</b>
                     </div>
 
-                    <div class="d-flex justify-content-between mb-2">
-                        <span>Số ngày thuê</span>
+                    <div class="d-flex justify-content-between">
+                        <span>Số ngày</span>
                         <b id="dayCountReview">1</b>
                     </div>
 
-                    <hr />
+                    <hr>
 
-                    <div class="d-flex justify-content-between mb-4">
+                    <div class="d-flex justify-content-between">
+
                         <span class="fw-bold">Tổng cộng</span>
-                        <span class="h5 text-primary-custom fw-bold"
-                              id="finalTotal">
-                            @cartTotal.ToString("#,##0")₫
+
+                        <span class="fw-bold text-success" id="finalTotal">
+                            @cartTotal.ToString("#,##0") ₫
                         </span>
+
                     </div>
 
-                    <button type="submit"
-                            class="btn btn-checkout-final w-100">
+                    <button type="submit" class="btn btn-success w-100 mt-3">
                         Xác nhận đặt hàng
                     </button>
 
@@ -273,7 +137,6 @@
         </div>
 
     </form>
-    ```
 
 </div>
 
@@ -281,36 +144,36 @@
 
     document.addEventListener("DOMContentLoaded",function(){
 
-        const startInput = document.getElementById("rentalStart");
-        const endInput = document.getElementById("rentalEnd");
+    const startInput = document.getElementById("rentalStart");
+    const endInput = document.getElementById("rentalEnd");
 
-        const dayCountText = document.getElementById("dayCountText");
-        const dayCountReview = document.getElementById("dayCountReview");
-        const finalTotalSpan = document.getElementById("finalTotal");
+    const dayCount = document.getElementById("dayCount");
+    const dayCountReview = document.getElementById("dayCountReview");
+    const finalTotal = document.getElementById("finalTotal");
 
-        const basePrice = @cartTotal;
+    const basePrice = @cartTotal.ToString(System.Globalization.CultureInfo.InvariantCulture);
 
-        function updatePrice(){
+    function updatePrice(){
 
-            const start = new Date(startInput.value);
-            const end = new Date(endInput.value);
+    const start = new Date(startInput.value);
+    const end = new Date(endInput.value);
 
-            let diffDays = Math.ceil((end - start) / (1000*60*60*24));
+    let days = Math.ceil((end-start)/(1000*60*60*24));
 
-            if(diffDays <= 0) diffDays = 1;
+    if(days <= 0) days = 1;
 
-            dayCountText.innerText = "Thời gian: " + diffDays + " ngày";
-            dayCountReview.innerText = diffDays;
+    dayCount.innerText = days;
+    dayCountReview.innerText = days;
 
-            const total = basePrice * diffDays;
+    let total = basePrice * days;
 
-            finalTotalSpan.innerText =
-                total.toLocaleString('vi-VN') + "₫";
+    finalTotal.innerText = total.toLocaleString('vi-VN') + " ₫";
 
-        }
+    }
 
-        startInput.addEventListener("change",updatePrice);
-        endInput.addEventListener("change",updatePrice);
+    startInput.addEventListener("change",updatePrice);
+    endInput.addEventListener("change",updatePrice);
 
     });
+
 </script>

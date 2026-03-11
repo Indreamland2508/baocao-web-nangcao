@@ -163,8 +163,8 @@ namespace BAOCAOWEBNANGCAO.Controllers
                 CustomerEmail = customerEmail,
                 ShippingAddress = shippingAddress,
                 Note = note,
-                RentalStartDate = rentalStart,
-                RentalEndDate = rentalEnd,
+                RentalStartDate = DateTime.SpecifyKind(rentalStart, DateTimeKind.Utc),
+                RentalEndDate = DateTime.SpecifyKind(rentalEnd, DateTimeKind.Utc),
                 OrderDate = DateTime.Now,
                 Status = "Pending",
                 TotalAmount = finalTotal
