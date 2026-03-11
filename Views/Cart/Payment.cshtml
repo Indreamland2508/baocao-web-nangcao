@@ -30,13 +30,12 @@
 
         const data = await res.json();
 
-        if(data.status === "Paid"){
-
+        if(data.status === "Approved"){
+            document.getElementById("status").innerText = "Thanh toán thành công!";
             window.location.href = "/Cart/OrderSuccess";
-
         }
     }
 
-    setInterval(checkPayment,3000);
+    setInterval(checkPayment,2000);
 
 </script>
