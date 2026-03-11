@@ -165,7 +165,7 @@ namespace BAOCAOWEBNANGCAO.Controllers
                 Note = note,
                 RentalStartDate = DateTime.SpecifyKind(rentalStart, DateTimeKind.Utc),
                 RentalEndDate = DateTime.SpecifyKind(rentalEnd, DateTimeKind.Utc),
-                OrderDate = DateTime.Now,
+                OrderDate = DateTime.UtcNow,
                 Status = "Pending",
                 TotalAmount = finalTotal
             };
