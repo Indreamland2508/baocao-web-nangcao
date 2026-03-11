@@ -75,7 +75,13 @@ namespace BAOCAOWEBNANGCAO.Controllers
             {
                 cart.Add(new CartItem
                 {
-                    Product = product,
+                    Product = new Product
+                    {
+                        Id = product.Id,
+                        Name = product.Name,
+                        PricePerDay = product.PricePerDay,
+                        ImageUrl = product.ImageUrl
+                    },
                     Quantity = quantity
                 });
             }
