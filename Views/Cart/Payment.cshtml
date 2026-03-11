@@ -9,7 +9,36 @@
 <img src="https://qr.sepay.vn/img?acc=0982412582005&bank=MB&amount=@Model.TotalAmount&des=ORDER@Model.Id" width="300" />
 
 <p>
-	Quét QR để thanh toán <br>
-	Nội dung chuyển khoản:
-	<b>ORDER@Model.Id</b>
+    Quét QR để thanh toán <br />
+    Nội dung chuyển khoản:
+    <b>ORDER@Model.Id</b>
 </p>
+
+<p id="status" style="color:orange;">
+    Đang chờ thanh toán...
+</p>
+
+<script>
+
+    const orderId = @Model.Id;
+
+    async function checkPayment() {
+
+        const res = await fetch("/api/payment/check/" + orderId);
+
+        if (!res.ok) return;
+
+        const data = await res.json();
+
+        if (data.status === "Paid") {
+
+            document.getElementById("status").innerText = "Thanh toán thành công!";
+
+            window.location.href = "/Cart/OrderSuccess";
+
+        }
+    }
+
+    setInterval(checkPayment, 5000);
+
+</script>
