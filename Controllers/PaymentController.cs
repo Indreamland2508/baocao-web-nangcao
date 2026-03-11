@@ -1,6 +1,7 @@
 ﻿using BAOCAOWEBNANGCAO.Data;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using System.Text.Json;
 
 namespace BAOCAOWEBNANGCAO.Controllers
 {
@@ -15,13 +16,17 @@ namespace BAOCAOWEBNANGCAO.Controllers
             _context = context;
         }
 
-        // Nhận webhook từ SePay
         [HttpPost("webhook")]
-        public async Task<IActionResult> Webhook([FromBody] dynamic data)
+        public async Task<IActionResult> Webhook()
         {
-            try
+            using var reader = new StreamReader(Request.Body);
+            var body = await reader.ReadToEndAsync();
+
+            var json = JsonDocument.Parse(body);
+
+            if (json.RootElement.TryGetProperty("content", out var contentValue))
             {
-                string content = data.content;
+                string content = contentValue.GetString();
 
                 if (content.StartsWith("ORDER"))
                 {
@@ -39,16 +44,11 @@ namespace BAOCAOWEBNANGCAO.Controllers
                         }
                     }
                 }
+            }
 
-                return Ok();
-            }
-            catch
-            {
-                return Ok();
-            }
+            return Ok();
         }
 
-        // API để frontend kiểm tra trạng thái
         [HttpGet("check/{orderId}")]
         public async Task<IActionResult> Check(int orderId)
         {
